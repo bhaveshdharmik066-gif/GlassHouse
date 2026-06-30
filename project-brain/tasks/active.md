@@ -1,2 +1,2 @@
 # Active Tasks
-- Phase 1: Build Target System (`target_vulnerable/`) with 4 vulnerabilities and manual test harness.
+- Phase 2: Build Attack-Strategy Agent (standalone agent with payload generation + test harness).

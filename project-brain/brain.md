@@ -62,8 +62,15 @@ Five components: Target System (mock MCP server + BookingBot), Attack-Strategy A
 - Mock target systems only.
 
 ## TODO Registry
-- Phase 1: Build target_vulnerable/
+- ~~Phase 1: Build target_vulnerable/~~ ✅ COMPLETED
 - Phase 2: Build Attack-Strategy Agent
 - Phase 3: Build Harness + Evaluator
 - Phase 4: Build LoopAgent + CLI
 - Phase 5: Build target_defended/
+
+## Phase 1 Implementation Notes
+- MCP mock adapter implemented (`target_vulnerable/local_mcp_adapter.py`) — simulates MCP server with in-memory booking store
+- BookingBot agent implemented using `google-adk` (`Agent` + `Runner`-based async execution)
+- Tool binding wired through MCP adapter interface (`call_tool` / `list_tools`)
+- Execution model: direct invocation → refactored to `Runner` + `InMemorySessionService` + async run loop
+- 4 vulnerabilities planted and manually verified: VULN-1 (tool-description poisoning), VULN-2 (indirect injection), VULN-3 (direct override, resisted), VULN-4 (over-privileged tool)
