@@ -63,8 +63,8 @@ Five components: Target System (mock MCP server + BookingBot), Attack-Strategy A
 
 ## TODO Registry
 - ~~Phase 1: Build target_vulnerable/~~ ✅ COMPLETED
-- Phase 2: Build Attack-Strategy Agent
-- Phase 3: Build Harness + Evaluator
+- ~~Phase 2: Build Attack-Strategy Agent~~ ✅ COMPLETED
+- ~~Phase 3: Build Harness + Evaluator~~ ✅ COMPLETED
 - Phase 4: Build LoopAgent + CLI
 - Phase 5: Build target_defended/
 
@@ -74,3 +74,15 @@ Five components: Target System (mock MCP server + BookingBot), Attack-Strategy A
 - Tool binding wired through MCP adapter interface (`call_tool` / `list_tools`)
 - Execution model: direct invocation → refactored to `Runner` + `InMemorySessionService` + async run loop
 - 4 vulnerabilities planted and manually verified: VULN-1 (tool-description poisoning), VULN-2 (indirect injection), VULN-3 (direct override, resisted), VULN-4 (over-privileged tool)
+
+## Phase 2 Implementation Notes
+- Implemented `AttackStrategyAgent` using `google-adk` (`LlmAgent`) in `attack_agent/agent.py`.
+- Developed standalone test harness (`attack_agent/test_attack_agent.py`) and offline validator (`attack_agent/validate_logic_offline.py`).
+- Supported 4 attack techniques targeting BookingBot: `direct_override`, `roleplay_jailbreak`, `tool_description_poisoning`, and `indirect_injection`.
+- Enforced strict mapping rules for `injection_vector` in the system instructions:
+  - `direct_override` → `user_message`
+  - `roleplay_jailbreak` → `user_message`
+  - `tool_description_poisoning` → `tool_description`
+  - `indirect_injection` → `tool_output_field`
+- Fixed a bug where the validator performed only a membership check and accepted incorrect vectors (e.g. `user_message` for `tool_description_poisoning`).
+- Updated system instruction and test harness validators to enforce strict per-technique validation.
