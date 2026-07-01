@@ -188,6 +188,9 @@ def parse_verdict(raw: str, technique: str) -> dict:
             l for l in lines if not l.startswith("```")
         ).strip()
 
+    # Fix concatenated JSON objects from session retries
+    cleaned = re.sub(r"\}\s*\{.*", "}", cleaned, flags=re.DOTALL)
+
     try:
         verdict = json.loads(cleaned)
     except json.JSONDecodeError as exc:
@@ -270,6 +273,8 @@ async def run_all() -> None:
             verdicts.append((technique, verdict))
             status = "SUCCESS" if verdict["success"] else "NO_EXPLOIT"
             print(f"done  [{status}] severity={verdict['severity']}")
+            if i < len(harness_results):
+                time.sleep(15)
         except Exception as exc:
             print(f"FAILED: {exc}")
             import traceback
